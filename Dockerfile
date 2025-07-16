@@ -9,13 +9,14 @@ ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# 安装 Python 依赖到虚拟环境中
+# 安装 Python 依赖到虚拟环境中 (使用国内镜像源加速)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
-# 安装 Playwright 的系统依赖和 Chromium 浏览器
+# 更换为国内镜像源并安装 Playwright 的系统依赖和 Chromium 浏览器
 # 我们只安装 curl 来运行 playwright 命令，然后就删除它
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
+RUN sed -i 's|http://deb.debian.org|https://mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/debian.sources \
+    && apt-get update && apt-get install -y --no-install-recommends curl \
     && playwright install-deps chromium \
     && playwright install chromium \
     && apt-get purge -y --auto-remove curl \
