@@ -23,26 +23,22 @@
 ntf通知截图
 ![img_2.png](img_2.png)
 
-## 🚀 快速开始 (Web UI 推荐)
+## 🚀 快速开始
 
-推荐使用 Web 管理界面来操作本项目，体验最佳。
+请遵循以下步骤来配置和启动项目。
 
-### 第 1 步: 环境准备
+### 第 1 步: 环境准备与基础配置 (通用)
 
-克隆本项目到本地:
-```bash
-git clone https://github.com/dingyufei615/ai-goofish-monitor
-cd ai-goofish-monitor
-```
+无论你选择哪种部署方式，都需要先完成这些基础准备工作。
 
-安装所需的Python依赖：
-```bash
-pip install -r requirements.txt
-```
+1.  **克隆项目**:
+    ```bash
+    git clone https://github.com/dingyufei615/ai-goofish-monitor
+    cd ai-goofish-monitor
+    ```
 
-### 第 2 步: 基础配置
-
-1.  **配置环境变量**: 在项目根目录创建一个 `.env` 文件，并填入以下配置信息。
+2.  **配置环境变量**:
+    在项目根目录创建一个 `.env` 文件，并填入你的 OpenAI 和 ntfy 配置。
     ```env
     # OpenAI API 相关配置
     OPENAI_API_KEY="sk-..."
@@ -53,22 +49,55 @@ pip install -r requirements.txt
     NTFY_TOPIC_URL="https://ntfy.sh/your-topic-name" # 替换为你的 ntfy 主题 URL
     ```
 
-2.  **获取登录状态 (重要!)**: 为了让爬虫能够以登录状态访问闲鱼，**必须先运行一次登录脚本**以生成会话状态文件。
-    ```bash
-    python login.py
-    ```
-    运行后会弹出一个浏览器窗口，请使用**手机闲鱼App扫描二维码**完成登录。成功后，程序会自动关闭，并在项目根目录生成一个 `xianyu_state.json` 文件。
+3.  **获取登录状态 (重要!)**:
+    由于登录闲鱼需要图形界面进行扫码，这一步**必须在你的本地电脑上完成**。
+    - 首先，在本地安装项目依赖：
+      ```bash
+      pip install -r requirements.txt
+      ```
+    - 然后，运行登录脚本：
+      ```bash
+      python login.py
+      ```
+    - 在弹出的浏览器窗口中，使用**手机闲鱼App扫描二维码**完成登录。成功后，项目根目录会生成一个 `xianyu_state.json` 文件。这个文件是后续所有操作的凭证。
 
-### 第 3 步: 启动 Web 服务
+### 第 2 步: 选择你的启动方式
 
-一切就绪后，启动 Web 管理后台服务器。
+完成以上准备后，你可以选择以下任意一种方式来运行服务。
+
+#### 方式一: 本地直接启动
+
+直接在你的电脑上运行 Web 服务器。
+
 ```bash
 python web_server.py
 ```
 
-### 第 4 步: 开始使用
+#### 方式二: 使用 Docker 启动 (推荐)
 
-在浏览器中打开 `http://127.0.0.1:8000` 访问管理后台。
+使用 Docker 可以将服务运行在一个隔离的环境中，更稳定、更可靠。
+
+1.  **构建 Docker 镜像**:
+    ```bash
+    docker build -t goofish-monitor .
+    ```
+
+2.  **启动 Docker 容器**:
+    ```bash
+    docker run -d -p 8000:8000 --name goofish-app -v $(pwd):/app goofish-monitor
+    ```
+    > **说明**: `-v $(pwd):/app` 命令会将当前项目目录完整地挂载到容器的 `/app` 目录。这能确保容器读取到你已生成的 `xianyu_state.json` 和 `.env` 文件。同时，所有由程序产生的数据（如 `config.json` 的修改、日志、结果文件、图片）都会被保存在你的本地项目文件夹中，实现了数据的完全持久化和轻松管理。
+
+3.  **管理 Docker 容器**:
+    -   查看实时日志: `docker logs -f goofish-app`
+    -   停止服务: `docker stop goofish-app`
+    -   重启服务: `docker start goofish-app`
+    -   进入容器 (用于调试): `docker exec -it goofish-app bash`
+    -   删除容器: `docker rm goofish-app`
+
+### 第 3 步: 开始使用
+
+服务启动后，在浏览器中打开 `http://127.0.0.1:8000` 访问管理后台。
 
 1.  在 **“任务管理”** 页面，点击 **“创建新任务”**。
 2.  在弹出的窗口中，用自然语言描述你的购买需求（例如：“我想买一台95新以上的索尼A7M4相机，预算1万3以内，快门数低于5000”），并填写任务名称、关键词等信息。

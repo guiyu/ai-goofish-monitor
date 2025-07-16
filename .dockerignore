@@ -1,0 +1,27 @@
+# Git and Docker files
+.git
+.gitignore
+.dockerignore
+Dockerfile
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE and OS files
+.idea/
+*.iml
+.DS_Store
+
+# Local environment
+venv/
+.venv/
+
+# Sensitive and generated files that should not be in the image
+# These will be mounted via volumes instead.
+.env
+xianyu_state.json
+*.jsonl
+images/
+logs/
+.aider*
