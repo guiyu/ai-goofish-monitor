@@ -473,6 +473,6 @@ async def shutdown_event():
 if __name__ == "__main__":
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
-    print("启动 Web 管理界面，请在浏览器访问 http://127.0.0.1:8000")
+    print("启动 Web 管理界面，请在浏览器访问 http://0.0.0.0:8000")
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

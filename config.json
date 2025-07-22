@@ -12,7 +12,7 @@
   },
   {
     "task_name": "DJI Mini 3 Pro",
-    "enabled": true,
+    "enabled": false,
     "keyword": "mini 3 pro",
     "max_pages": 3,
     "personal_only": true,
@@ -22,14 +22,14 @@
     "max_price": "4500"
   },
   {
-    "task_name": "婴儿车",
-    "enabled": false,
-    "keyword": "babycare 婴儿车",
+    "task_name": "iPhone11 xR",
+    "enabled": true,
+    "keyword": "iPhone11",
     "max_pages": 3,
     "personal_only": true,
-    "min_price": "500",
-    "max_price": "1000",
+    "min_price": "400",
+    "max_price": "798",
     "ai_prompt_base_file": "prompts/base_prompt.txt",
-    "ai_prompt_criteria_file": "prompts/babycare_婴儿车_criteria.txt"
+    "ai_prompt_criteria_file": "prompts/iphone11_criteria.txt"
   }
 ]
