@@ -1,29 +1,7 @@
 [
   {
-    "task_name": "MacBook Air M1",
-    "enabled": false,
-    "keyword": "macbook air m1",
-    "max_pages": 3,
-    "personal_only": true,
-    "min_price": "3000",
-    "max_price": "5000",
-    "ai_prompt_base_file": "prompts/base_prompt.txt",
-    "ai_prompt_criteria_file": "prompts/macbook_criteria.txt"
-  },
-  {
-    "task_name": "DJI Mini 3 Pro",
-    "enabled": false,
-    "keyword": "mini 3 pro",
-    "max_pages": 3,
-    "personal_only": true,
-    "ai_prompt_base_file": "prompts/base_prompt.txt",
-    "ai_prompt_criteria_file": "prompts/dji_mini3_criteria.txt",
-    "min_price": "3500",
-    "max_price": "4500"
-  },
-  {
     "task_name": "iPhone11 xR",
-    "enabled": true,
+    "enabled": false,
     "keyword": "iPhone11",
     "max_pages": 3,
     "personal_only": true,
@@ -31,5 +9,16 @@
     "max_price": "798",
     "ai_prompt_base_file": "prompts/base_prompt.txt",
     "ai_prompt_criteria_file": "prompts/iphone11_criteria.txt"
+  },
+  {
+    "task_name": "电纸书",
+    "enabled": true,
+    "keyword": "电纸书 文石 微信读书 ",
+    "max_pages": 3,
+    "personal_only": true,
+    "min_price": "400",
+    "max_price": "600",
+    "ai_prompt_base_file": "prompts/base_prompt.txt",
+    "ai_prompt_criteria_file": "prompts/电纸书_文石_微信读书__criteria.txt"
   }
 ]
