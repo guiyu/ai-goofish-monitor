@@ -1,24 +1,46 @@
 [
   {
-    "task_name": "iPhone11 xR",
-    "enabled": false,
-    "keyword": "iPhone11",
-    "max_pages": 3,
-    "personal_only": true,
-    "min_price": "400",
-    "max_price": "798",
-    "ai_prompt_base_file": "prompts/base_prompt.txt",
-    "ai_prompt_criteria_file": "prompts/iphone11_criteria.txt"
-  },
-  {
     "task_name": "电纸书",
-    "enabled": true,
-    "keyword": "电纸书 文石 微信读书 ",
+    "enabled": false,
+    "keyword": "电纸书",
     "max_pages": 3,
     "personal_only": true,
     "min_price": "400",
     "max_price": "600",
     "ai_prompt_base_file": "prompts/base_prompt.txt",
     "ai_prompt_criteria_file": "prompts/电纸书_文石_微信读书__criteria.txt"
+  },
+  {
+    "task_name": "破解ps4",
+    "enabled": false,
+    "keyword": "ps4 破解",
+    "max_pages": 3,
+    "personal_only": true,
+    "min_price": "300",
+    "max_price": "600",
+    "ai_prompt_base_file": "prompts/base_prompt.txt",
+    "ai_prompt_criteria_file": "prompts/ps4_破解_criteria.txt"
+  },
+  {
+    "task_name": "显示器",
+    "enabled": false,
+    "keyword": "23寸 DVI 2K",
+    "max_pages": 3,
+    "personal_only": true,
+    "min_price": "50",
+    "max_price": "200",
+    "ai_prompt_base_file": "prompts/base_prompt.txt",
+    "ai_prompt_criteria_file": "prompts/23寸_dvi_2k_criteria.txt"
+  },
+  {
+    "task_name": "投影仪",
+    "enabled": true,
+    "keyword": "投影仪",
+    "max_pages": 3,
+    "personal_only": true,
+    "min_price": "500",
+    "max_price": "800",
+    "ai_prompt_base_file": "prompts/base_prompt.txt",
+    "ai_prompt_criteria_file": "prompts/投影仪_criteria.txt"
   }
 ]

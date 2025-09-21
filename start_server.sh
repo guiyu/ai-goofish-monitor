@@ -107,9 +107,9 @@ stop_existing_processes() {
     fi
     
     # 3. 检查端口占用
-    local port_pid=$(lsof -ti:8000)
+    local port_pid=$(lsof -ti:8099)
     if [ -n "$port_pid" ]; then
-        log_warn "端口 8000 被进程 $port_pid 占用，正在终止..."
+        log_warn "端口 8099 被进程 $port_pid 占用，正在终止..."
         kill "$port_pid" 2>/dev/null || kill -9 "$port_pid" 2>/dev/null
         sleep 2
     fi
@@ -154,8 +154,8 @@ start_service() {
         # 等待 web 服务器启动
         local wait_count=0
         while [ $wait_count -lt 10 ]; do
-            if curl -s http://localhost:8000/api/settings/status > /dev/null 2>&1; then
-                log_info "Web 服务器已启动，可以访问 http://localhost:8000"
+            if curl -s http://localhost:8099/api/settings/status > /dev/null 2>&1; then
+                log_info "Web 服务器已启动，可以访问 http://localhost:8099"
                 break
             fi
             sleep 1
@@ -185,7 +185,7 @@ show_usage() {
     echo "  查看重启日志: tail -f logs/restart.log"
     echo "  重新启动:     $0"
     echo ""
-    echo "Web 管理界面: http://localhost:8000"
+    echo "Web 管理界面: http://localhost:8099"
     echo ""
 }
 

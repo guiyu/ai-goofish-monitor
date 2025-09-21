@@ -48,9 +48,9 @@ show_detailed_status() {
     
     # 3. 端口状态
     echo -e "${BLUE}[端口状态]${NC}"
-    local port_info=$(lsof -i:8000 2>/dev/null)
+    local port_info=$(lsof -i:8099 2>/dev/null)
     if [ -n "$port_info" ]; then
-        echo -e "  ${GREEN}✓${NC} 端口 8000 已被占用:"
+        echo -e "  ${GREEN}✓${NC} 端口 8099 已被占用:"
         echo "$port_info" | tail -n +2 | while IFS= read -r line; do
             local process=$(echo "$line" | awk '{print $1}')
             local pid=$(echo "$line" | awk '{print $2}')
@@ -58,15 +58,15 @@ show_detailed_status() {
             echo "    进程: $process, PID: $pid, 状态: $state"
         done
     else
-        echo -e "  ${RED}✗${NC} 端口 8000 未被占用"
+        echo -e "  ${RED}✗${NC} 端口 8099 未被占用"
     fi
     echo ""
     
     # 4. Web 服务状态
     echo -e "${BLUE}[Web 服务状态]${NC}"
-    if curl -s --connect-timeout 3 http://localhost:8000/api/settings/status > /dev/null 2>&1; then
+    if curl -s --connect-timeout 3 http://localhost:8099/api/settings/status > /dev/null 2>&1; then
         echo -e "  ${GREEN}✓${NC} Web 服务正常响应"
-        echo "  📱 Web 管理界面: http://localhost:8000"
+        echo "  📱 Web 管理界面: http://localhost:8099"
     else
         echo -e "  ${RED}✗${NC} Web 服务无响应"
     fi

@@ -5,23 +5,16 @@ import asyncio
 import json
 import aiofiles
 from dotenv import load_dotenv
-from openai import AsyncOpenAI
+import requests
 
 # --- AI Configuration ---
 load_dotenv()
-API_KEY = os.getenv("OPENAI_API_KEY")
-BASE_URL = os.getenv("OPENAI_BASE_URL")
-MODEL_NAME = os.getenv("OPENAI_MODEL_NAME")
+BASE_URL = os.getenv("OLLAMA_BASE_URL")
+MODEL_NAME = os.getenv("OLLAMA_MODEL_NAME")
 
 # Check configuration
 if not all([BASE_URL, MODEL_NAME]):
-    raise ValueError("错误：请确保在 .env 文件中完整设置了 OPENAI_BASE_URL 和 OPENAI_MODEL_NAME。(OPENAI_API_KEY 对于某些服务是可选的)")
-
-# Initialize OpenAI client
-try:
-    client = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL)
-except Exception as e:
-    raise RuntimeError(f"初始化 OpenAI 客户端时出错: {e}") from e
+    raise ValueError("错误：请确保在 .env 文件中完整设置了 OLLAMA_BASE_URL 和 OLLAMA_MODEL_NAME。")
 
 # The meta-prompt to instruct the AI
 META_PROMPT_TEMPLATE = """
@@ -70,16 +63,23 @@ async def generate_criteria(user_description: str, reference_file_path: str) -> 
 
     print("正在调用AI生成新的分析标准，请稍候...")
     try:
-        response = await client.chat.completions.create(
-            model=MODEL_NAME,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.5, # Lower temperature for more predictable structure
+        # Ollama API call
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(
+            f"{BASE_URL}/api/generate",
+            json={
+                "model": MODEL_NAME,
+                "prompt": prompt,
+                "stream": False
+            },
+            headers=headers
         )
-        generated_text = response.choices[0].message.content
+        response.raise_for_status()
+        generated_text = response.json().get('response', '')
         print("AI已成功生成内容。")
         return generated_text.strip()
     except Exception as e:
-        print(f"调用 OpenAI API 时出错: {e}")
+        print(f"调用 Ollama API 时出错: {e}")
         raise e
 
 

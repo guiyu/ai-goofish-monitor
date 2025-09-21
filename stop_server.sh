@@ -65,9 +65,9 @@ stop_service() {
     fi
     
     # 3. 检查端口占用
-    local port_pid=$(lsof -ti:8000)
+    local port_pid=$(lsof -ti:8099)
     if [ -n "$port_pid" ]; then
-        log_warn "端口 8000 被进程 $port_pid 占用，正在终止..."
+        log_warn "端口 8099 被进程 $port_pid 占用，正在终止..."
         kill "$port_pid" 2>/dev/null || kill -9 "$port_pid" 2>/dev/null
         stopped_something=true
         sleep 2
@@ -102,11 +102,11 @@ show_status() {
     fi
     
     # 检查端口
-    local port_pid=$(lsof -ti:8000)
+    local port_pid=$(lsof -ti:8099)
     if [ -n "$port_pid" ]; then
-        echo "端口 8000: 被进程 $port_pid 占用"
+        echo "端口 8099: 被进程 $port_pid 占用"
     else
-        echo "端口 8000: 空闲"
+        echo "端口 8099: 空闲"
     fi
     
     echo ""

@@ -14,7 +14,6 @@ from urllib.parse import urlencode
 
 import requests
 from dotenv import load_dotenv
-from openai import AsyncOpenAI, APIStatusError
 from playwright.async_api import async_playwright, Response, TimeoutError as PlaywrightTimeoutError
 from requests.exceptions import HTTPError
 
@@ -28,8 +27,8 @@ DETAIL_API_URL_PATTERN = "h5api.m.goofish.com/h5/mtop.taobao.idle.pc.detail"
 # --- AI & Notification Configuration ---
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
-BASE_URL = os.getenv("OPENAI_BASE_URL")
-MODEL_NAME = os.getenv("OPENAI_MODEL_NAME")
+BASE_URL = os.getenv("OLLAMA_BASE_URL")
+MODEL_NAME = os.getenv("OLLAMA_MODEL_NAME")
 NTFY_TOPIC_URL = os.getenv("NTFY_TOPIC_URL")
 WX_BOT_URL = os.getenv("WX_BOT_URL")
 PCURL_TO_MOBILE = os.getenv("PCURL_TO_MOBILE")
@@ -37,13 +36,7 @@ RUN_HEADLESS = os.getenv("RUN_HEADLESS", "true").lower() != "false"
 
 # 检查配置是否齐全
 if not all([BASE_URL, MODEL_NAME]):
-    sys.exit("错误：请确保在 .env 文件中完整设置了 OPENAI_BASE_URL 和 OPENAI_MODEL_NAME。(OPENAI_API_KEY 对于某些服务是可选的)")
-
-# 初始化 OpenAI 客户端
-try:
-    client = AsyncOpenAI(api_key=API_KEY, base_url=BASE_URL)
-except Exception as e:
-    sys.exit(f"初始化 OpenAI 客户端时出错: {e}")
+    sys.exit("错误：请确保在 .env 文件中完整设置了 OLLAMA_BASE_URL 和 OLLAMA_MODEL_NAME。")
 
 # 定义目录和文件名
 IMAGE_SAVE_DIR = "images"
@@ -402,7 +395,7 @@ def retry_on_failure(retries=3, delay=5):
             for i in range(retries):
                 try:
                     return await func(*args, **kwargs)
-                except (APIStatusError, HTTPError) as e:
+                except HTTPError as e:
                     print(f"函数 {func.__name__} 第 {i + 1}/{retries} 次尝试失败，发生HTTP错误。")
                     if hasattr(e, 'status_code'):
                         print(f"  - 状态码 (Status Code): {e.status_code}")
@@ -594,15 +587,25 @@ async def get_ai_analysis(product_data, image_paths=None, prompt_text=""):
                 user_content_list.append(
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}})
 
-    messages = [{"role": "user", "content": user_content_list}]
+    # Convert image content to text for Ollama (since Ollama doesn't support vision models directly)
+    prompt_content = combined_text_prompt
+    if image_paths:
+        prompt_content += "\n\n[注意：这个商品包含 " + str(len(image_paths)) + " 张图片，但当前AI模型无法直接分析图片内容]\n"
 
-    response = await client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=messages,
-        response_format={"type": "json_object"}
+    # Ollama API call
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(
+        f"{BASE_URL}/api/generate",
+        json={
+            "model": MODEL_NAME, 
+            "prompt": prompt_content,
+            "format": "json",
+            "stream": False
+        },
+        headers=headers
     )
-
-    ai_response_content = response.choices[0].message.content
+    response.raise_for_status()
+    ai_response_content = response.json().get('response', '{}')
 
     try:
         return json.loads(ai_response_content)
